@@ -28,13 +28,10 @@ public class DatabaseService {
                      connection.prepareStatement(query)) {
             try (ResultSet result = statement.executeQuery()) {
                 while (result.next()) {
-                    LOGGER.info(
-                            "id: {}, name: {}, surname: {}, group_id: {}",
-                            result.getInt("id"),
-                            result.getString("name"),
-                            result.getString("surname"),
-                            result.getString("group_id")
-                    );
+                    System.out.println(result.getInt("id"));
+                    System.out.println(result.getString("name"));
+                    System.out.println(result.getString("surname"));
+                    System.out.println(result.getString("group_id"));
                 }
             }
         }
