@@ -1,19 +1,89 @@
 package org.example;
 
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
-public class Main {
-    public static void main(String[] args) {
-        // Press Alt+Enter with your caret at the highlighted text to see how
-        // IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
 
-        // Press Shift+F10 or click the green arrow button in the gutter to run the code.
-        for (int i = 1; i <= 5; i++) {
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Properties;
 
-            // Press Shift+F9 to start debugging your code. We have set one breakpoint
-            // for you, but you can always add more by pressing Ctrl+F8.
-            System.out.println("i = " + i);
+class ApplicationProperties {
+
+    private static final String FILE_NAME = "/application.properties";
+
+    private static ApplicationProperties INSTANCE;
+
+    private final Properties properties = new Properties();
+
+    private void init() {
+        try (InputStream is = getClass().getResourceAsStream(FILE_NAME)) {
+            if(Objects.nonNull(is))
+                properties.load(is);
+        } catch (IOException e) {
         }
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
+
+    public Map<String, String> toMap() {
+        Map<String, String> map = new HashMap<>();
+        for (final String name: properties.stringPropertyNames())
+            map.put(name, properties.getProperty(name));
+
+        return map;
+    }
+
+    public static ApplicationProperties getInstance() {
+        if(Objects.isNull(INSTANCE)) {
+            INSTANCE = new ApplicationProperties();
+            INSTANCE.init();
+        }
+
+        return INSTANCE;
+    }
+}
+
+class DBProperties {
+
+    private static final String URL = "database.url";
+    private static final String USER = "database.user";
+    private static final String PASSWORD = "database.password";
+
+    private static DBProperties INSTANSE;
+
+    private String url;
+    private String user;
+    private String password;
+
+    private DBProperties() {}
+
+    private void init(Properties properties) {
+        url = properties.getProperty(URL);
+        user = properties.getProperty(USER);
+        password = properties.getProperty(PASSWORD);
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public static DBProperties getProperties() {
+        if(Objects.isNull(INSTANSE)) {
+            INSTANSE = new DBProperties();
+            INSTANSE.init(ApplicationProperties.getInstance().getProperties());
+        }
+
+        return INSTANSE;
     }
 }

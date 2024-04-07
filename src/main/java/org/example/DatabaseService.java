@@ -5,8 +5,6 @@ import org.jetbrains.annotations.NotNull;
 import java.sql.*;
 
 public class DatabaseService {
-    private static final Logger LOGGER =
-            LoggerFactory.getLogger(DatabaseService.class);
 
     public void exec() {
         DBProperties properties = DBProperties.getProperties();
@@ -20,12 +18,11 @@ public class DatabaseService {
             updateStudent(connection);
             transaction(connection);
         } catch (SQLException e) {
-            LOGGER.info(e.getMessage(), e);
+            System.out.println(e.getMessage());
         }
     }
 
-    private void getStudents(@NotNull Connection connection) throws
-            SQLException {
+    private void getStudents(@NotNull Connection connection) throws SQLException {
         String query = "SELECT * FROM student";
         try (PreparedStatement statement =
                      connection.prepareStatement(query)) {
@@ -45,8 +42,7 @@ public class DatabaseService {
 
     private void addStudent(@NotNull Connection connection) throws
             SQLException {
-        String query = "INSERT INTO student (name, surname, group_id) VALUES
-        ( ?, ?, ?)";
+        String query = "INSERT INTO student (name, surname, group_id) VALUES ( ?, ?, ?)";
         try (PreparedStatement statement =
                      connection.prepareStatement(query)) {
             statement.setString(1, "Александр");
@@ -81,7 +77,6 @@ public class DatabaseService {
             example.toString();
             connection.commit();
         } catch (RuntimeException e) {
-            LOGGER.info("Ошибка {}", e.getMessage());
             connection.rollback();
         } finally {
             connection.setAutoCommit(true);
@@ -89,4 +84,4 @@ public class DatabaseService {
     }
 
 }
-}
+
